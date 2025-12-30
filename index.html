@@ -1,27 +1,16 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>(function(s){s.dataset.zone='10133824',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <title>HamzaEditz 2.0 - Number Search</title>
-    <!-- Load Tailwind CSS -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Poppins Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
- 
-<!-- Feather Icons -->
-    <script src="../QlB6DQ6rHJn2.net/npm/feather-icons/dist/M4k3svJvsNbS.js"></script>
-    <script type="text/javascript">
-  atOptions = {
-  	'key' : 'bc1q90dk3rk5n3hj4clmwdddqq32e5jr3kgwgwn74h',
-  	'format' : 'iframe',
-  	'height' : 50,
-  	'width' : 320,
-  	'params' : {}
-  };
-</script>
-<script type="text/javascript" src="../iw87g99lMa93.com/bc1q92ug982wvlrrhswyuz7dtqqxrdgcxyk8t2hach/wEjF2DCmDerW.js"></script>
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
     <style>
         :root {
             --primary-gradient: linear-gradient(90deg, #8E2DE2, #4A00E0);
@@ -38,7 +27,7 @@
             color: #f0f0f0;
         }
 
-        /* --- Gemini Text Effect --- */
+        /* Gemini Text Effect */
         .gemini-title {
             font-weight: 800;
             background: linear-gradient(90deg, #8E2DE2, #4A00E0, #ec4899, #f59e0b, #8E2DE2);
@@ -61,20 +50,14 @@
         .btn-gradient:hover:not(:disabled) {
             opacity: 0.9;
         }
-        
-        .spinning {
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
+        .spinning { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
         /* Secondary Link Button */
         .btn-link {
             background-color: var(--bg-light);
             border: 1px solid var(--border-color);
-            color: #d1d5db; /* gray-300 */
+            color: #d1d5db;
             transition: all 0.2s;
         }
         .btn-link:hover {
@@ -82,40 +65,46 @@
             color: #fff;
         }
 
-    </style>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        'primary-color': 'var(--primary-color)',
-                        'bg-dark': 'var(--bg-dark)',
-                        'bg-light': 'var(--bg-light)',
-                        'bg-lighter': 'var(--bg-lighter)',
-                        'border-color': 'var(--border-color)',
-                    }
-                }
-            }
+        /* --- Result Cards --- */
+        .result-card {
+            background: linear-gradient(135deg, #8E2DE2, #4A00E0, #ec4899, #f59e0b);
+            background-size: 400% 400%;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border-top: 4px solid #fff;
+            color: #f0f0f0;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.4);
+            transition: transform 0.3s, box-shadow 0.3s, background-position 3s;
+            background-clip: border-box;
+            animation: cardGradient 10s ease infinite;
         }
-    </script>
+        .result-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.6);
+            background-position: 100% 0%;
+        }
+        .result-card h3 { text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+        .result-card p strong { color: #facc15; } /* yellow */
+        .result-card p span { font-family: monospace; color: #fff; }
+        @keyframes cardGradient {
+            0%{background-position:0% 50%;}
+            50%{background-position:100% 50%;}
+            100%{background-position:0% 50%;}
+        }
+
+    </style>
 </head>
 <body class="min-h-screen p-4 sm:p-8">
 
     <div class="max-w-4xl mx-auto space-y-8">
-        
+
         <header class="text-center py-4 border-b border-border-color">
-            <h1 class="text-4xl sm:text-5xl font-extrabold gemini-title">
-                HamzaEditz 2.0 - Number Search
-            </h1>
+            <h1 class="text-4xl sm:text-5xl font-extrabold gemini-title">HamzaEditz 2.0 - Number Search</h1>
         </header>
 
         <!-- Search Box -->
         <div class="flex flex-col sm:flex-row gap-4">
             <input type="tel" id="phoneInput" class="flex-1 bg-bg-lighter border border-border-color text-gray-200 text-lg rounded-lg focus:ring-primary-color focus:border-primary-color p-4" placeholder="Enter phone number (e.g., 0309...)">
-            
             <button id="searchButton" class="btn-gradient text-white font-bold py-4 px-6 rounded-lg flex items-center justify-center text-lg disabled:opacity-50 disabled:cursor-wait">
                 <i id="searchIcon" data-feather="search" class="w-6 h-6 mr-2"></i>
                 <span id="buttonText">Search</span>
@@ -127,197 +116,111 @@
             <i data-feather="loader" class="animate-spin h-10 w-10 inline-block text-primary-color"></i>
             <p class="text-lg mt-4 text-gray-400">Loading...</p>
         </div>
-        
+
         <!-- Error Message -->
         <div id="errorDisplay" class="text-center hidden p-4 bg-red-900 bg-opacity-30 border border-red-700 rounded-lg">
             <p id="errorMessage" class="text-red-300"></p>
         </div>
 
         <!-- Results Area -->
-        <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Results will be injected here -->
-        </div>
+        <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
 
         <!-- Social Links -->
         <div class="links text-center pt-8 border-t border-border-color flex flex-wrap justify-center gap-4">
-            <a href="https://t.me/hamzaeditz2" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2">
-                <i data-feather="send" class="w-4 h-4"></i>
-                Telegram Channel
-            </a>
-            <a href="https://youtube.com/@hamziitheking" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2">
-                <i data-feather="youtube" class="w-4 h-4"></i>
-                YouTube
-            </a>
-            <a href="https://chat.whatsapp.com/Dzla0knrGFYIaTqJGQ38Cz?mode=hqrt3" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2">
-                <i data-feather="message-circle" class="w-4 h-4"></i>
-                WhatsApp Group
-            </a>
+            <a href="https://t.me/hamzaeditz2" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2"><i data-feather="send" class="w-4 h-4"></i>Telegram Channel</a>
+            <a href="https://youtube.com/@hamziitheking" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2"><i data-feather="youtube" class="w-4 h-4"></i>YouTube</a>
+            <a href="https://chat.whatsapp.com/Dzla0knrGFYIaTqJGQ38Cz?mode=hqrt3" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2"><i data-feather="message-circle" class="w-4 h-4"></i>WhatsApp Group</a>
         </div>
+
     </div>
 
-    <script>
-        const phoneInput = document.getElementById('phoneInput');
-        const searchButton = document.getElementById('searchButton');
-        const buttonText = document.getElementById('buttonText');
-        const searchIcon = document.getElementById('searchIcon');
-        const resultsContainer = document.getElementById('resultsContainer');
-        const loading = document.getElementById('loading');
-        const errorDisplay = document.getElementById('errorDisplay');
-        const errorMessage = document.getElementById('errorMessage');
+<script>
+    const phoneInput = document.getElementById('phoneInput');
+    const searchButton = document.getElementById('searchButton');
+    const buttonText = document.getElementById('buttonText');
+    const searchIcon = document.getElementById('searchIcon');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const loading = document.getElementById('loading');
+    const errorDisplay = document.getElementById('errorDisplay');
+    const errorMessage = document.getElementById('errorMessage');
 
-        searchButton.addEventListener('click', searchPhone);
-        
-        phoneInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchPhone();
+    searchButton.addEventListener('click', searchPhone);
+    phoneInput.addEventListener('keypress', e => { if(e.key==='Enter') searchPhone(); });
+
+    async function searchPhone(){
+        let query = phoneInput.value.trim();
+        if(!query){ showError('Please enter a phone number.'); return; }
+
+        if(query.startsWith('0')) query='92'+query.substring(1);
+        else if(query.startsWith('+92')) query=query.substring(1);
+
+        const apiUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://legendxdata.site/Api/simdata.php?phone=' + query);
+
+        setLoading(true);
+        resultsContainer.innerHTML = '';
+        errorDisplay.classList.add('hidden');
+
+        try{
+            const response = await fetch(apiUrl);
+            if(!response.ok) throw new Error('Network response was not ok.');
+            const data = await response.json();
+
+            let results = null;
+            if(data && data.records && Array.isArray(data.records)) results=data.records;
+            else if(data && data.data && Array.isArray(data.data)) results=data.data;
+            else if(data && data.results && Array.isArray(data.results)) results=data.results;
+            else if(data && Array.isArray(data)) results=data;
+            else if(data && typeof data==='object' && Object.keys(data).length>0 && data.status!=='error') results=[data];
+            else if(data && data.status==='error') throw new Error(data.message || 'No records found.');
+
+            if(results && results.length>0) displayResults(results);
+            else showError(data.message || 'No records found for this number.');
+
+        }catch(error){ showError(error.message || 'An error occurred.'); }
+        finally{ setLoading(false); }
+    }
+
+    function setLoading(isLoading){
+        searchButton.disabled=isLoading;
+        if(isLoading){
+            loading.classList.remove('hidden');
+            buttonText.textContent="Searching...";
+            searchIcon.classList.add('spinning');
+        } else{
+            loading.classList.add('hidden');
+            buttonText.textContent="Search";
+            searchIcon.classList.remove('spinning');
+        }
+    }
+
+    function showError(message){
+        errorMessage.textContent=message;
+        errorDisplay.classList.remove('hidden');
+    }
+
+    function displayResults(records){
+        resultsContainer.innerHTML='';
+        records.forEach((record,index)=>{
+            const card=document.createElement('div');
+            card.className='result-card';
+
+            const name = record.Name || record.name || record.NAME || `Result ${index+1}`;
+            let detailsHtml='<div class="mt-4 space-y-2 text-lg">';
+            for(const key in record){
+                if(key.toLowerCase()==='name') continue;
+                if(record[key]===null||record[key]==='') continue;
+                detailsHtml+=`<p><strong>${key.replace(/_/g,' ')}:</strong> <span>${record[key]}</span></p>`;
             }
+            detailsHtml+='</div>';
+
+            card.innerHTML=`<h3 class="text-2xl font-bold text-primary-color pb-3 border-b border-border-color">${name}</h3>${detailsHtml}`;
+            resultsContainer.appendChild(card);
         });
+        feather.replace();
+    }
 
-        async function searchPhone() {
-            let query = phoneInput.value.trim();
-            if (!query) {
-                showError('Please enter a phone number.');
-                return;
-            }
+    document.addEventListener('DOMContentLoaded', ()=>{ feather.replace(); });
+</script>
 
-            // --- Number normalization (agar zaroorat ho) ---
-            if (query.startsWith('0')) {
-                query = '92' + query.substring(1); // Convert 03... to 923... if API needs it
-            } else if (query.startsWith('+92')) {
-                query = query.substring(1); // Convert +923... to 923...
-            }
-            // Agar API 03... format maangti hai toh is logic ko badalna hoga
-            
-            // --- FIX: Updated API URL ---
-            const apiUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://legendxdata.site/Api/simdata.php?phone=' + query);
-
-            setLoading(true);
-            resultsContainer.innerHTML = '';
-            errorDisplay.classList.add('hidden');
-
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok.');
-                }
-                const data = await response.json();
-
-                // --- NEW: Dynamic result finding ---
-                let results = null;
-                if (data && data.data && Array.isArray(data.data)) {
-                    results = data.data; // e.g., { "success": true, "data": [...] }
-                } else if (data && data.results && Array.isArray(data.results)) {
-                    results = data.results; // e.g., { "success": true, "results": [...] }
-                } else if (data && data.records && Array.isArray(data.records)) {
-                    results = data.records; // e.g., { "success": true, "records": [...] }
-                } else if (data && Array.isArray(data)) {
-                    results = data; // e.g., [...]
-                } else if (data && typeof data === 'object' && Object.keys(data).length > 0 && data.status !== 'error') {
-                    // Agar single object response hai
-                    results = [data]; 
-                } else if (data && data.status === 'error') {
-                    throw new Error(data.message || 'No records found.');
-                }
-                // --- END NEW LOGIC ---
-
-                if (results && results.length > 0 && Object.keys(results[0]).length > 0) {
-                    displayResults(results);
-                } else {
-                    showError(data.message || 'No records found for this number.');
-                }
-
-            } catch (error) {
-                console.error('Fetch Error:', error);
-                showError(error.message || 'An error occurred while fetching data. Please try again.');
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        function setLoading(isLoading) {
-            searchButton.disabled = isLoading;
-            if (isLoading) {
-                loading.classList.remove('hidden');
-                buttonText.textContent = "Searching...";
-                searchIcon.classList.add('spinning');
-            } else {
-                loading.classList.add('hidden');
-                buttonText.textContent = "Search";
-                searchIcon.classList.remove('spinning');
-            }
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorDisplay.classList.remove('hidden');
-        }
-
-        /**
-         * --- NEW: Dynamic Display Function ---
-         * Ab yeh Name, CNIC, etc. dhoondne ke bajaye, jo bhi data milta hai usko dikha deta hai.
-         */
-        function displayResults(records) {
-            resultsContainer.innerHTML = ''; // Clear previous results
-            records.forEach((record, index) => {
-                const card = document.createElement('div');
-                card.className = 'result-card bg-bg-light p-5 rounded-xl border-t-4 border-primary-color shadow-lg';
-                
-                // Try to find a name, otherwise use "Result"
-                const name = record.Name || record.name || record.NAME || `Result ${index + 1}`;
-                
-                let detailsHtml = '<div class="mt-4 space-y-2 text-lg">';
-                
-                // Dynamically create key-value pairs
-                for (const key in record) {
-                    // Name/name ko title mein dikha diya hai, isliye skip karein
-                    if (key.toLowerCase() === 'name') continue; 
-                    
-                    // Khali values ko skip karein
-                    if (record[key] === null || record[key] === "") continue;
-
-                    detailsHtml += `
-                        <p>
-                            <strong class="text-gray-400 font-medium capitalize">${escapeHTML(key.replace(/_/g, ' '))}:</strong> 
-                            <span class="font-mono">${escapeHTML(record[key])}</span>
-                        </p>
-                    `;
-                }
-                detailsHtml += '</div>';
-
-                card.innerHTML = `
-                    <h3 class="text-2xl font-bold text-primary-color pb-3 border-b border-border-color">${escapeHTML(name)}</h3>
-                    ${detailsHtml}
-                `;
-                
-                resultsContainer.appendChild(card);
-            });
-            feather.replace(); // Refresh icons if any were added
-        }
-        
-        /**
-         * Helper function to prevent XSS
-         */
-        function escapeHTML(str) {
-            if (str === null || str === undefined) return 'N/A';
-            str = String(str); // Convert to string just in case
-            return str.replace(/[&<>"']/g, function(match) {
-                return {
-                    '&': '&',
-                    '<': '<',
-                    '>': '>',
-                    '"': '"',
-                    "'": '''
-                }[match];
-            });
-        }
-        
-        // Initial icon load
-        document.addEventListener('DOMContentLoaded', () => {
-            feather.replace();
-        });
-
-    </script>
-
-
-
-</body></html>
+</body>
+</html>
