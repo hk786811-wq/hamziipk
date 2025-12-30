@@ -1,226 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HamzaEditz 2.0 - Number Search</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Poppins Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Feather Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HamzaEditz 2.0 - Number Search</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
-    <style>
-        :root {
-            --primary-gradient: linear-gradient(90deg, #8E2DE2, #4A00E0);
-            --primary-color: #8E2DE2;
-            --bg-dark: #0f0f12;
-            --bg-light: #1f1f1f;
-            --bg-lighter: #2a2a2a;
-            --border-color: #333;
-        }
+<style>
+:root {
+    --primary-gradient: linear-gradient(90deg, #8E2DE2, #4A00E0);
+    --primary-color: #8E2DE2;
+    --bg-dark: #0f0f12;
+    --bg-light: #1f1f1f;
+    --bg-lighter: #2a2a2a;
+    --border-color: #333;
+}
+body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); color: #f0f0f0; }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-dark);
-            color: #f0f0f0;
-        }
+.gemini-title { font-weight: 800; background: linear-gradient(90deg, #8E2DE2, #4A00E0, #ec4899, #f59e0b, #8E2DE2); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gemini-shimmer 8s linear infinite; }
+@keyframes gemini-shimmer {0%{background-position:0% 50%;}100%{background-position:400% 50%;}}
+.btn-gradient { background: var(--primary-gradient); transition: opacity 0.2s; }
+.btn-gradient:hover:not(:disabled){opacity:0.9;}
+.spinning { animation: spin 1s linear infinite; }
+@keyframes spin {from {transform:rotate(0deg);} to{transform:rotate(360deg);}}
+.btn-link { background-color: var(--bg-light); border:1px solid var(--border-color); color:#d1d5db; transition:all 0.2s; }
+.btn-link:hover { border-color: var(--primary-color); color:#fff; }
 
-        /* Gemini Text Effect */
-        .gemini-title {
-            font-weight: 800;
-            background: linear-gradient(90deg, #8E2DE2, #4A00E0, #ec4899, #f59e0b, #8E2DE2);
-            background-size: 400% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gemini-shimmer 8s linear infinite;
-        }
-        @keyframes gemini-shimmer {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 400% 50%; }
-        }
+/* Result Cards */
+.result-card { background: linear-gradient(135deg, #8E2DE2, #4A00E0, #ec4899, #f59e0b); background-size: 400% 400%; padding:1.5rem; border-radius:1rem; border-top:4px solid #fff; color:#f0f0f0; box-shadow:0 10px 15px rgba(0,0,0,0.4); transition: transform 0.3s, box-shadow 0.3s, background-position 3s; background-clip: border-box; animation: cardGradient 10s ease infinite; }
+.result-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 25px rgba(0,0,0,0.6); background-position: 100% 0%; }
+.result-card h3 { text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+.result-card p strong { color:#facc15; }
+.result-card p span { font-family: monospace; color:#fff; }
+@keyframes cardGradient {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 
-        /* Gradient Button */
-        .btn-gradient {
-            background: var(--primary-gradient);
-            transition: opacity 0.2s;
-        }
-        .btn-gradient:hover:not(:disabled) {
-            opacity: 0.9;
-        }
-        .spinning { animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        /* Secondary Link Button */
-        .btn-link {
-            background-color: var(--bg-light);
-            border: 1px solid var(--border-color);
-            color: #d1d5db;
-            transition: all 0.2s;
-        }
-        .btn-link:hover {
-            border-color: var(--primary-color);
-            color: #fff;
-        }
-
-        /* --- Result Cards --- */
-        .result-card {
-            background: linear-gradient(135deg, #8E2DE2, #4A00E0, #ec4899, #f59e0b);
-            background-size: 400% 400%;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            border-top: 4px solid #fff;
-            color: #f0f0f0;
-            box-shadow: 0 10px 15px rgba(0,0,0,0.4);
-            transition: transform 0.3s, box-shadow 0.3s, background-position 3s;
-            background-clip: border-box;
-            animation: cardGradient 10s ease infinite;
-        }
-        .result-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 25px rgba(0,0,0,0.6);
-            background-position: 100% 0%;
-        }
-        .result-card h3 { text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-        .result-card p strong { color: #facc15; } /* yellow */
-        .result-card p span { font-family: monospace; color: #fff; }
-        @keyframes cardGradient {
-            0%{background-position:0% 50%;}
-            50%{background-position:100% 50%;}
-            100%{background-position:0% 50%;}
-        }
-
-    </style>
+/* Login Overlay */
+#loginOverlay { position: fixed; inset:0; background-color: rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center; z-index:50; }
+#loginBox { background-color: var(--bg-light); padding:2rem; border-radius:1rem; width:90%; max-width:400px; box-shadow:0 10px 25px rgba(0,0,0,0.7); text-align:center; }
+#loginBox input { width:100%; padding:0.75rem; margin:0.5rem 0; border-radius:0.5rem; border:1px solid var(--border-color); background-color: var(--bg-lighter); color:#fff; }
+#loginBox button { width:100%; margin-top:1rem; }
+</style>
 </head>
 <body class="min-h-screen p-4 sm:p-8">
 
-    <div class="max-w-4xl mx-auto space-y-8">
+<!-- Login Overlay -->
+<div id="loginOverlay">
+    <div id="loginBox">
+        <h2 class="text-2xl font-bold mb-4 gemini-title">Login</h2>
+        <input type="text" id="loginUser" placeholder="Username">
+        <input type="password" id="loginPass" placeholder="Password">
+        <button id="loginButton" class="btn-gradient text-white font-bold py-3 px-4 rounded-lg">Login</button>
+        <p id="loginError" class="text-red-400 mt-2 hidden">Invalid credentials!</p>
+    </div>
+</div>
 
-        <header class="text-center py-4 border-b border-border-color">
-            <h1 class="text-4xl sm:text-5xl font-extrabold gemini-title">HamzaEditz 2.0 - Number Search</h1>
-        </header>
+<div id="mainContent" class="max-w-4xl mx-auto space-y-8 hidden">
 
-        <!-- Search Box -->
-        <div class="flex flex-col sm:flex-row gap-4">
-            <input type="tel" id="phoneInput" class="flex-1 bg-bg-lighter border border-border-color text-gray-200 text-lg rounded-lg focus:ring-primary-color focus:border-primary-color p-4" placeholder="Enter phone number (e.g., 0309...)">
-            <button id="searchButton" class="btn-gradient text-white font-bold py-4 px-6 rounded-lg flex items-center justify-center text-lg disabled:opacity-50 disabled:cursor-wait">
-                <i id="searchIcon" data-feather="search" class="w-6 h-6 mr-2"></i>
-                <span id="buttonText">Search</span>
-            </button>
-        </div>
+    <header class="text-center py-4 border-b border-border-color">
+        <h1 class="text-4xl sm:text-5xl font-extrabold gemini-title">HamzaEditz 2.0 - Number Search</h1>
+    </header>
 
-        <!-- Loading Spinner -->
-        <div id="loading" class="text-center hidden py-8">
-            <i data-feather="loader" class="animate-spin h-10 w-10 inline-block text-primary-color"></i>
-            <p class="text-lg mt-4 text-gray-400">Loading...</p>
-        </div>
-
-        <!-- Error Message -->
-        <div id="errorDisplay" class="text-center hidden p-4 bg-red-900 bg-opacity-30 border border-red-700 rounded-lg">
-            <p id="errorMessage" class="text-red-300"></p>
-        </div>
-
-        <!-- Results Area -->
-        <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-
-        <!-- Social Links -->
-        <div class="links text-center pt-8 border-t border-border-color flex flex-wrap justify-center gap-4">
-            <a href="https://t.me/hamzaeditz2" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2"><i data-feather="send" class="w-4 h-4"></i>Telegram Channel</a>
-            <a href="https://youtube.com/@hamziitheking" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2"><i data-feather="youtube" class="w-4 h-4"></i>YouTube</a>
-            <a href="https://chat.whatsapp.com/Dzla0knrGFYIaTqJGQ38Cz?mode=hqrt3" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2"><i data-feather="message-circle" class="w-4 h-4"></i>WhatsApp Group</a>
-        </div>
-
+    <!-- Search Box -->
+    <div class="flex flex-col sm:flex-row gap-4">
+        <input type="tel" id="phoneInput" class="flex-1 bg-bg-lighter border border-border-color text-gray-200 text-lg rounded-lg focus:ring-primary-color focus:border-primary-color p-4" placeholder="Enter phone number (e.g., 0309...)">
+        <button id="searchButton" class="btn-gradient text-white font-bold py-4 px-6 rounded-lg flex items-center justify-center text-lg disabled:opacity-50 disabled:cursor-wait">
+            <i id="searchIcon" data-feather="search" class="w-6 h-6 mr-2"></i>
+            <span id="buttonText">Search</span>
+        </button>
     </div>
 
+    <!-- Loading Spinner -->
+    <div id="loading" class="text-center hidden py-8">
+        <i data-feather="loader" class="animate-spin h-10 w-10 inline-block text-primary-color"></i>
+        <p class="text-lg mt-4 text-gray-400">Loading...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorDisplay" class="text-center hidden p-4 bg-red-900 bg-opacity-30 border border-red-700 rounded-lg">
+        <p id="errorMessage" class="text-red-300"></p>
+    </div>
+
+    <!-- Results Area -->
+    <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+
+    <!-- Social Links -->
+    <div class="links text-center pt-8 border-t border-border-color flex flex-wrap justify-center gap-4">
+        <a href="https://t.me/chuza_404" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2"><i data-feather="send" class="w-4 h-4"></i>Telegram Channel</a>
+        <a href="https://youtube.com/@hamziitheking" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2"><i data-feather="youtube" class="w-4 h-4"></i>YouTube</a>
+        <a href="https://chat.whatsapp.com/Dzla0knrGFYIaTqJGQ38Cz?mode=hqrt3" target="_blank" class="btn-link py-2 px-4 rounded-lg flex items-center gap-2"><i data-feather="message-circle" class="w-4 h-4"></i>WhatsApp Group</a>
+    </div>
+
+</div>
+
 <script>
-    const phoneInput = document.getElementById('phoneInput');
-    const searchButton = document.getElementById('searchButton');
-    const buttonText = document.getElementById('buttonText');
-    const searchIcon = document.getElementById('searchIcon');
-    const resultsContainer = document.getElementById('resultsContainer');
-    const loading = document.getElementById('loading');
-    const errorDisplay = document.getElementById('errorDisplay');
-    const errorMessage = document.getElementById('errorMessage');
+feather.replace();
 
-    searchButton.addEventListener('click', searchPhone);
-    phoneInput.addEventListener('keypress', e => { if(e.key==='Enter') searchPhone(); });
+// --- LOGIN LOGIC ---
+const loginOverlay = document.getElementById('loginOverlay');
+const mainContent = document.getElementById('mainContent');
+const loginButton = document.getElementById('loginButton');
+const loginUser = document.getElementById('loginUser');
+const loginPass = document.getElementById('loginPass');
+const loginError = document.getElementById('loginError');
 
-    async function searchPhone(){
-        let query = phoneInput.value.trim();
-        if(!query){ showError('Please enter a phone number.'); return; }
+// Set your credentials here
+const USERNAME = "admin";
+const PASSWORD = "1122";
 
-        if(query.startsWith('0')) query='92'+query.substring(1);
-        else if(query.startsWith('+92')) query=query.substring(1);
-
-        const apiUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://legendxdata.site/Api/simdata.php?phone=' + query);
-
-        setLoading(true);
-        resultsContainer.innerHTML = '';
-        errorDisplay.classList.add('hidden');
-
-        try{
-            const response = await fetch(apiUrl);
-            if(!response.ok) throw new Error('Network response was not ok.');
-            const data = await response.json();
-
-            let results = null;
-            if(data && data.records && Array.isArray(data.records)) results=data.records;
-            else if(data && data.data && Array.isArray(data.data)) results=data.data;
-            else if(data && data.results && Array.isArray(data.results)) results=data.results;
-            else if(data && Array.isArray(data)) results=data;
-            else if(data && typeof data==='object' && Object.keys(data).length>0 && data.status!=='error') results=[data];
-            else if(data && data.status==='error') throw new Error(data.message || 'No records found.');
-
-            if(results && results.length>0) displayResults(results);
-            else showError(data.message || 'No records found for this number.');
-
-        }catch(error){ showError(error.message || 'An error occurred.'); }
-        finally{ setLoading(false); }
+loginButton.addEventListener('click', ()=>{
+    if(loginUser.value === USERNAME && loginPass.value === PASSWORD){
+        loginOverlay.style.display='none';
+        mainContent.classList.remove('hidden');
+    }else{
+        loginError.classList.remove('hidden');
     }
+});
 
-    function setLoading(isLoading){
-        searchButton.disabled=isLoading;
-        if(isLoading){
-            loading.classList.remove('hidden');
-            buttonText.textContent="Searching...";
-            searchIcon.classList.add('spinning');
-        } else{
-            loading.classList.add('hidden');
-            buttonText.textContent="Search";
-            searchIcon.classList.remove('spinning');
+// --- SEARCH LOGIC ---
+const phoneInput = document.getElementById('phoneInput');
+const searchButton = document.getElementById('searchButton');
+const buttonText = document.getElementById('buttonText');
+const searchIcon = document.getElementById('searchIcon');
+const resultsContainer = document.getElementById('resultsContainer');
+const loading = document.getElementById('loading');
+const errorDisplay = document.getElementById('errorDisplay');
+const errorMessage = document.getElementById('errorMessage');
+
+searchButton.addEventListener('click', searchPhone);
+phoneInput.addEventListener('keypress', e => { if(e.key==='Enter') searchPhone(); });
+
+async function searchPhone(){
+    let query = phoneInput.value.trim();
+    if(!query){ showError('Please enter a phone number.'); return; }
+    if(query.startsWith('0')) query='92'+query.substring(1);
+    else if(query.startsWith('+92')) query=query.substring(1);
+
+    const apiUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://legendxdata.site/Api/simdata.php?phone=' + query);
+
+    setLoading(true);
+    resultsContainer.innerHTML='';
+    errorDisplay.classList.add('hidden');
+
+    try{
+        const response = await fetch(apiUrl);
+        if(!response.ok) throw new Error('Network response was not ok.');
+        const data = await response.json();
+
+        let results = null;
+        if(data && data.records && Array.isArray(data.records)) results=data.records;
+        else if(data && data.data && Array.isArray(data.data)) results=data.data;
+        else if(data && data.results && Array.isArray(data.results)) results=data.results;
+        else if(data && Array.isArray(data)) results=data;
+        else if(data && typeof data==='object' && Object.keys(data).length>0 && data.status!=='error') results=[data];
+        else if(data && data.status==='error') throw new Error(data.message || 'No records found.');
+
+        if(results && results.length>0) displayResults(results);
+        else showError(data.message || 'No records found for this number.');
+
+    }catch(error){ showError(error.message || 'An error occurred.'); }
+    finally{ setLoading(false); }
+}
+
+function setLoading(isLoading){
+    searchButton.disabled=isLoading;
+    if(isLoading){
+        loading.classList.remove('hidden');
+        buttonText.textContent="Searching...";
+        searchIcon.classList.add('spinning');
+    }else{
+        loading.classList.add('hidden');
+        buttonText.textContent="Search";
+        searchIcon.classList.remove('spinning');
+    }
+}
+
+function showError(message){
+    errorMessage.textContent=message;
+    errorDisplay.classList.remove('hidden');
+}
+
+function displayResults(records){
+    resultsContainer.innerHTML='';
+    records.forEach((record,index)=>{
+        const card=document.createElement('div');
+        card.className='result-card';
+
+        const name = record.Name || record.name || record.NAME || `Result ${index+1}`;
+        let detailsHtml='<div class="mt-4 space-y-2 text-lg">';
+        for(const key in record){
+            if(key.toLowerCase()==='name') continue;
+            if(record[key]===null||record[key]==='') continue;
+            detailsHtml+=`<p><strong>${key.replace(/_/g,' ')}:</strong> <span>${record[key]}</span></p>`;
         }
-    }
-
-    function showError(message){
-        errorMessage.textContent=message;
-        errorDisplay.classList.remove('hidden');
-    }
-
-    function displayResults(records){
-        resultsContainer.innerHTML='';
-        records.forEach((record,index)=>{
-            const card=document.createElement('div');
-            card.className='result-card';
-
-            const name = record.Name || record.name || record.NAME || `Result ${index+1}`;
-            let detailsHtml='<div class="mt-4 space-y-2 text-lg">';
-            for(const key in record){
-                if(key.toLowerCase()==='name') continue;
-                if(record[key]===null||record[key]==='') continue;
-                detailsHtml+=`<p><strong>${key.replace(/_/g,' ')}:</strong> <span>${record[key]}</span></p>`;
-            }
-            detailsHtml+='</div>';
-
-            card.innerHTML=`<h3 class="text-2xl font-bold text-primary-color pb-3 border-b border-border-color">${name}</h3>${detailsHtml}`;
-            resultsContainer.appendChild(card);
-        });
-        feather.replace();
-    }
-
-    document.addEventListener('DOMContentLoaded', ()=>{ feather.replace(); });
+        detailsHtml+='</div>';
+        card.innerHTML=`<h3 class="text-2xl font-bold text-primary-color pb-3 border-b border-border-color">${name}</h3>${detailsHtml}`;
+        resultsContainer.appendChild(card);
+    });
+    feather.replace();
+}
 </script>
-
 </body>
 </html>
