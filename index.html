@@ -150,7 +150,7 @@ async function searchPhone(){
     if(query.startsWith('+92')) query = query.slice(1);
 
     const apiUrl = 'https://corsproxy.io/?' +
-        encodeURIComponent('https://legendxdata.site/Api/simdata.php?phone=' + query);
+        encodeURIComponent('https://fam-official.serv00.net/api/famdatabase.php?number=' + query);
 
     setLoading(true);
     resultsContainer.innerHTML = '';
