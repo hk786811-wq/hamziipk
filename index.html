@@ -3,192 +3,157 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HAMZII-KING 2.0 - Number Search</title>
+<title>HamzaEditz 2.0 - Number Search</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
 <style>
-:root {
-    --primary-gradient: linear-gradient(90deg, #8E2DE2, #4A00E0);
-    --primary-color: #8E2DE2;
-    --bg-dark: #0f0f12;
-    --bg-light: #1f1f1f;
-    --bg-lighter: #2a2a2a;
-    --border-color: #333;
-}
-
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: var(--bg-dark);
-    color: #f0f0f0;
+    background:#0f0f12;
+    color:#f0f0f0;
 }
-
-.gemini-title {
-    font-weight: 800;
-    background: linear-gradient(90deg, #8E2DE2, #4A00E0, #ec4899, #f59e0b, #8E2DE2);
-    background-size: 400% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gemini-shimmer 8s linear infinite;
-}
-
-@keyframes gemini-shimmer {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 400% 50%; }
-}
-
 .btn-gradient {
-    background: var(--primary-gradient);
-    transition: opacity 0.2s;
+    background: linear-gradient(90deg,#8E2DE2,#4A00E0);
 }
-.btn-gradient:hover:not(:disabled){opacity:0.9;}
+.result-row strong { color:#facc15; }
 
-.spinning {
-    animation: spin 1s linear infinite;
+/* Popup */
+#popupOverlay {
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.8);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:50;
 }
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+#popupBox {
+    background:#1f1f1f;
+    width:92%;
+    max-width:420px;
+    border-radius:16px;
+    padding:20px;
+    animation: pop 0.25s ease;
 }
-
-.btn-link {
-    background-color: var(--bg-light);
-    border: 1px solid var(--border-color);
-    color: #d1d5db;
-}
-.btn-link:hover {
-    border-color: var(--primary-color);
-    color: #fff;
-}
-
-/* Result Cards */
-.result-card {
-    background: linear-gradient(135deg, #8E2DE2, #4A00E0, #ec4899, #f59e0b);
-    background-size: 400% 400%;
-    padding: 1.5rem;
-    border-radius: 1rem;
-    border-top: 4px solid #fff;
-    animation: cardGradient 10s ease infinite;
-}
-
-@keyframes cardGradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+@keyframes pop {
+    from{transform:scale(0.9);opacity:0}
+    to{transform:scale(1);opacity:1}
 }
 </style>
 </head>
 
-<body class="min-h-screen p-4 sm:p-8">
+<body class="min-h-screen p-4">
 
-<div id="mainContent" class="max-w-4xl mx-auto space-y-8">
+<div class="max-w-xl mx-auto space-y-6">
 
-<header class="text-center py-4 border-b border-border-color">
-    <h1 class="text-4xl sm:text-5xl font-extrabold gemini-title">
-        HAMZII-KING 2.0 - Number Search
-    </h1>
-</header>
+<h1 class="text-3xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
+HamzaEditz 2.0
+</h1>
 
-<!-- Search -->
-<div class="flex flex-col sm:flex-row gap-4">
-    <input type="tel" id="phoneInput"
-        class="flex-1 bg-bg-lighter border border-border-color text-lg rounded-lg p-4"
-        placeholder="Enter phone number (0309...)">
+<div class="flex gap-2">
+<input id="phoneInput" type="tel"
+class="flex-1 p-4 rounded-lg bg-gray-800 border border-gray-700"
+placeholder="Enter number e.g. 0306xxxxxxx">
 
-    <button id="searchButton"
-        class="btn-gradient text-white font-bold py-4 px-6 rounded-lg flex items-center justify-center text-lg">
-        <i id="searchIcon" data-feather="search" class="w-6 h-6 mr-2"></i>
-        <span id="buttonText">Search</span>
-    </button>
+<button id="searchBtn"
+class="btn-gradient px-6 rounded-lg font-bold">
+Search
+</button>
 </div>
 
-<!-- Loading -->
-<div id="loading" class="text-center hidden py-8">
-    <i data-feather="loader" class="animate-spin h-10 w-10 inline-block"></i>
-    <p class="text-lg mt-4 text-gray-400">Loading...</p>
+<div id="errorBox" class="hidden bg-red-900/40 p-3 rounded-lg text-red-300 text-center"></div>
+
 </div>
 
-<!-- Error -->
-<div id="errorDisplay" class="text-center hidden p-4 bg-red-900 bg-opacity-30 rounded-lg">
-    <p id="errorMessage" class="text-red-300"></p>
+<!-- POPUP -->
+<div id="popupOverlay">
+<div id="popupBox">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-bold text-purple-400">Search Result</h2>
+<button onclick="closePopup()" class="text-gray-400 hover:text-white">
+<i data-feather="x"></i>
+</button>
 </div>
 
-<!-- Results -->
-<div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+<div id="popupContent" class="space-y-2 text-sm"></div>
 
-<!-- Links -->
-<div class="text-center pt-8 border-t border-border-color flex flex-wrap justify-center gap-4">
-    <a href="https://t.me/chuza_404" target="_blank" class="btn-link py-2 px-4 rounded-lg">Telegram</a>
-    <a href="https://youtube.com/@hamziitheking" target="_blank" class="btn-link py-2 px-4 rounded-lg">YouTube</a>
-    <a href="https://chat.whatsapp.com/Dzla0knrGFYIaTqJGQ38Cz" target="_blank" class="btn-link py-2 px-4 rounded-lg">WhatsApp</a>
+<button onclick="closePopup()"
+class="mt-5 w-full btn-gradient py-3 rounded-lg font-bold">
+Close
+</button>
 </div>
-
 </div>
 
 <script>
 feather.replace();
 
-const phoneInput = document.getElementById('phoneInput');
-const searchButton = document.getElementById('searchButton');
-const buttonText = document.getElementById('buttonText');
-const searchIcon = document.getElementById('searchIcon');
-const resultsContainer = document.getElementById('resultsContainer');
-const loading = document.getElementById('loading');
-const errorDisplay = document.getElementById('errorDisplay');
-const errorMessage = document.getElementById('errorMessage');
+const phoneInput = document.getElementById("phoneInput");
+const searchBtn = document.getElementById("searchBtn");
+const errorBox = document.getElementById("errorBox");
+const popupOverlay = document.getElementById("popupOverlay");
+const popupContent = document.getElementById("popupContent");
 
-searchButton.addEventListener('click', searchPhone);
-phoneInput.addEventListener('keypress', e => e.key === 'Enter' && searchPhone());
+searchBtn.onclick = searchNumber;
 
-async function searchPhone(){
-    let query = phoneInput.value.trim();
-    if(!query) return showError("Enter a phone number");
+async function searchNumber(){
+    let num = phoneInput.value.trim();
+    if(!num){
+        showError("Please enter a phone number");
+        return;
+    }
 
-    if(query.startsWith('0')) query = '92' + query.slice(1);
-    if(query.startsWith('+92')) query = query.slice(1);
+    if(num.startsWith("0")) num = num.slice(1);
+    if(num.startsWith("+")) num = num.replace("+","");
 
-    const apiUrl = 'https://corsproxy.io/?' +
-        encodeURIComponent('https://fam-official.serv00.net/api/famdatabase.php?number=' + query);
+    errorBox.classList.add("hidden");
 
-    setLoading(true);
-    resultsContainer.innerHTML = '';
-    errorDisplay.classList.add('hidden');
+    const api = `https://fam-official.serv00.net/api/famdatabase.php?number=${num}`;
 
-    try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        if(!data || data.status === 'error') throw new Error("No data found");
-        displayResults(Array.isArray(data) ? data : data.records || []);
-    } catch(err) {
-        showError(err.message);
-    } finally {
-        setLoading(false);
+    try{
+        const res = await fetch(api);
+        const json = await res.json();
+
+        if(!json.success || !json.data.records.length){
+            showError("No data found");
+            return;
+        }
+
+        showPopup(json.data.records[0]);
+
+    }catch(e){
+        showError("API error or blocked");
     }
 }
 
-function setLoading(v){
-    searchButton.disabled = v;
-    loading.classList.toggle('hidden', !v);
-    buttonText.textContent = v ? 'Searching...' : 'Search';
-    searchIcon.classList.toggle('spinning', v);
+function showPopup(data){
+    popupContent.innerHTML = "";
+    for(const key in data){
+        popupContent.innerHTML += `
+        <div class="result-row">
+            <strong>${key.replace("_"," ").toUpperCase()}:</strong>
+            <span>${data[key]}</span>
+        </div>`;
+    }
+    popupOverlay.style.display="flex";
+    feather.replace();
+}
+
+function closePopup(){
+    popupOverlay.style.display="none";
 }
 
 function showError(msg){
-    errorMessage.textContent = msg;
-    errorDisplay.classList.remove('hidden');
+    errorBox.textContent = msg;
+    errorBox.classList.remove("hidden");
 }
 
-function displayResults(records){
-    records.forEach((r,i)=>{
-        const d = document.createElement('div');
-        d.className = 'result-card';
-        d.innerHTML = `<h3 class="text-2xl font-bold mb-2">${r.Name || 'Result '+(i+1)}</h3>` +
-            Object.keys(r).map(k=>`<p><b>${k}:</b> ${r[k]}</p>`).join('');
-        resultsContainer.appendChild(d);
-    });
-}
+// Close popup when clicking outside
+popupOverlay.addEventListener("click", e=>{
+    if(e.target === popupOverlay) closePopup();
+});
 </script>
 
 </body>
