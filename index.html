@@ -3,10 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HamzaEditz 2.0</title>
+<title>HAMZI-PAK-FIND</title>
 
+<!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Icons -->
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
 <style>
@@ -93,9 +98,9 @@ Phone (10–11 digits) or CNIC (13 digits)<br>
 
 <input id="input"
 class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700"
-placeholder="3XXXXXXXX or Cnic_number">
+placeholder="3XXXXXXXX or CNIC">
 
-<button onclick="search()"
+<button onclick="searchData()"
 class="w-full btn-grad py-4 rounded-xl font-bold text-lg">
 Search
 </button>
@@ -135,19 +140,19 @@ Download TXT
 <script>
 feather.replace();
 
-const input=document.getElementById("input");
-const errorBox=document.getElementById("errorBox");
-const popupOverlay=document.getElementById("popupOverlay");
-const popupContent=document.getElementById("popupContent");
-const copyBtn=document.getElementById("copyBtn");
+const input = document.getElementById("input");
+const errorBox = document.getElementById("errorBox");
+const popupOverlay = document.getElementById("popupOverlay");
+const popupContent = document.getElementById("popupContent");
+const copyBtn = document.getElementById("copyBtn");
 
-let lastRecords=[];
+let lastRecords = [];
 
-async function search(){
- let val=input.value.trim();
+async function searchData(){
+ let val = input.value.trim();
 
  if(!val) return showError("Input required");
- if(val.startsWith("0")||val.startsWith("+"))
+ if(val.startsWith("0") || val.startsWith("+"))
    return showError("0 ya +92 mat lagao");
 
  if(!/^[0-9]{10,11}$/.test(val) && !/^[0-9]{13}$/.test(val))
@@ -155,22 +160,27 @@ async function search(){
 
  errorBox.classList.add("hidden");
 
- const api="https://corsproxy.io/?"+encodeURIComponent(
-   `https://fam-official.serv00.net/api/famdatabase.php?number=${val}`
- );
+ const apiURL = `https://fam-official.serv00.net/api/famdatabase.php?number=${val}`;
+ const api = "https://corsproxy.io/?" + encodeURIComponent(apiURL);
 
  try{
-   const res=await fetch(api);
-   const json=await res.json();
+   const res = await fetch(api);
+   if(!res.ok) return showError("API blocked / server issue");
 
-   if(!json.success||!json.data.records.length)
+   const text = await res.text();
+   let json;
+
+   try{ json = JSON.parse(text); }
+   catch{ return showError("Invalid API response"); }
+
+   if(!json.success || !json.data || !json.data.records || !json.data.records.length)
      return showError("No data found");
 
-   lastRecords=json.data.records;
+   lastRecords = json.data.records;
    showPopup(lastRecords);
 
  }catch{
-   showError("API blocked / network error");
+   showError("Network / CORS error");
  }
 }
 
@@ -180,10 +190,10 @@ function showPopup(records){
    popupContent.innerHTML+=`
    <div class="card">
      <div><strong>#${i+1}</strong></div>
-     <div><strong>NAME:</strong> ${r.full_name}</div>
-     <div><strong>PHONE:</strong> ${r.phone}</div>
-     <div><strong>CNIC:</strong> ${r.cnic}</div>
-     <div><strong>ADDRESS:</strong> ${r.address}</div>
+     <div><strong>NAME:</strong> ${r.full_name || "N/A"}</div>
+     <div><strong>PHONE:</strong> ${r.phone || "N/A"}</div>
+     <div><strong>CNIC:</strong> ${r.cnic || "N/A"}</div>
+     <div><strong>ADDRESS:</strong> ${r.address || "N/A"}</div>
    </div>`;
  });
  popupOverlay.style.display="flex";
@@ -194,17 +204,17 @@ function closePopup(){
  popupOverlay.style.display="none";
 }
 
-// COPY with tick
+// COPY WITH ✔
 function copyAll(){
  if(!lastRecords.length) return;
 
  let text="";
  lastRecords.forEach((r,i)=>{
    text+=`#${i+1}\n`;
-   for(const k in r){
-     text+=`${k.toUpperCase()} : ${r[k]}\n`;
-   }
-   text+="\n";
+   text+=`NAME : ${r.full_name}\n`;
+   text+=`PHONE : ${r.phone}\n`;
+   text+=`CNIC : ${r.cnic}\n`;
+   text+=`ADDRESS : ${r.address}\n\n`;
  });
  text+="CREDIT : HAMZI";
 
@@ -219,17 +229,17 @@ function copyAll(){
  },2000);
 }
 
-// DOWNLOAD
+// DOWNLOAD TXT
 function downloadTxt(){
  if(!lastRecords.length) return;
 
  let text="";
  lastRecords.forEach((r,i)=>{
    text+=`#${i+1}\n`;
-   for(const k in r){
-     text+=`${k.toUpperCase()} : ${r[k]}\n`;
-   }
-   text+="\n";
+   text+=`NAME : ${r.full_name}\n`;
+   text+=`PHONE : ${r.phone}\n`;
+   text+=`CNIC : ${r.cnic}\n`;
+   text+=`ADDRESS : ${r.address}\n\n`;
  });
  text+="CREDIT : HAMZI";
 
