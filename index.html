@@ -3,157 +3,251 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HamzaEditz 2.0 - Number Search</title>
+<title>HamzaEditz 2.0</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
 <style>
-body {
-    font-family: 'Poppins', sans-serif;
-    background:#0f0f12;
-    color:#f0f0f0;
+:root{
+ --grad:linear-gradient(90deg,#8E2DE2,#4A00E0,#ec4899,#f59e0b);
 }
-.btn-gradient {
-    background: linear-gradient(90deg,#8E2DE2,#4A00E0);
+body{
+ font-family:Poppins,sans-serif;
+ background:#0f0f12;
+ color:#fff;
 }
-.result-row strong { color:#facc15; }
-
-/* Popup */
-#popupOverlay {
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.8);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:50;
+.shiny{
+ background:var(--grad);
+ background-size:400%;
+ -webkit-background-clip:text;
+ -webkit-text-fill-color:transparent;
+ animation:shine 8s linear infinite;
 }
-#popupBox {
-    background:#1f1f1f;
-    width:92%;
-    max-width:420px;
-    border-radius:16px;
-    padding:20px;
-    animation: pop 0.25s ease;
+@keyframes shine{
+ 0%{background-position:0%}
+ 100%{background-position:400%}
 }
-@keyframes pop {
-    from{transform:scale(0.9);opacity:0}
-    to{transform:scale(1);opacity:1}
+.btn-grad{
+ background:var(--grad);
+ background-size:200%;
+ transition:.3s;
 }
+.btn-grad:hover{background-position:right}
+#popupOverlay{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.85);
+ display:none;
+ justify-content:center;
+ align-items:flex-end;
+ z-index:50;
+}
+#popupBox{
+ background:#1f1f1f;
+ width:100%;
+ max-width:430px;
+ border-radius:20px 20px 0 0;
+ padding:20px;
+ animation:up .35s ease;
+ max-height:90vh;
+ overflow:auto;
+}
+@keyframes up{
+ from{transform:translateY(100%)}
+ to{transform:translateY(0)}
+}
+.card{
+ background:#2a2a2a;
+ padding:12px;
+ border-radius:14px;
+ animation:fade .3s ease;
+}
+@keyframes fade{
+ from{opacity:0;transform:translateY(6px)}
+ to{opacity:1}
+}
+.card strong{color:#facc15}
+.icon-btn{
+ padding:10px;
+ border-radius:12px;
+ background:#374151;
+ transition:.2s;
+}
+.icon-btn:hover{transform:scale(1.1)}
 </style>
 </head>
 
-<body class="min-h-screen p-4">
+<body class="min-h-screen p-4 flex items-center justify-center">
 
-<div class="max-w-xl mx-auto space-y-6">
-
-<h1 class="text-3xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
-HamzaEditz 2.0
+<div class="w-full max-w-md space-y-6">
+<h1 class="text-4xl font-extrabold text-center shiny">
+HAMZI-PAK-FIND
 </h1>
 
-<div class="flex gap-2">
-<input id="phoneInput" type="tel"
-class="flex-1 p-4 rounded-lg bg-gray-800 border border-gray-700"
-placeholder="Enter number e.g. 0306xxxxxxx">
+<p class="text-center text-gray-400 text-sm">
+Phone (10–11 digits) or CNIC (13 digits)<br>
+<b>No 0 / No +92</b>
+</p>
 
-<button id="searchBtn"
-class="btn-gradient px-6 rounded-lg font-bold">
+<input id="input"
+class="w-full p-4 rounded-xl bg-gray-800 border border-gray-700"
+placeholder="3XXXXXXXX or Cnic_number">
+
+<button onclick="search()"
+class="w-full btn-grad py-4 rounded-xl font-bold text-lg">
 Search
 </button>
-</div>
 
-<div id="errorBox" class="hidden bg-red-900/40 p-3 rounded-lg text-red-300 text-center"></div>
+<div id="errorBox"
+class="hidden bg-red-900/40 p-3 rounded-xl text-red-300 text-center"></div>
 
+<p class="text-center text-xs text-gray-500 pt-4">
+CREDIT : HAMZI
+</p>
 </div>
 
 <!-- POPUP -->
 <div id="popupOverlay">
 <div id="popupBox">
-<div class="flex justify-between items-center mb-4">
-<h2 class="text-xl font-bold text-purple-400">Search Result</h2>
-<button onclick="closePopup()" class="text-gray-400 hover:text-white">
-<i data-feather="x"></i>
+
+<div class="flex justify-between items-center mb-3">
+<h2 class="text-xl font-bold shiny">Results</h2>
+<button onclick="closePopup()"><i data-feather="x"></i></button>
+</div>
+
+<div id="popupContent" class="space-y-4 text-sm"></div>
+
+<div class="flex gap-3 mt-5">
+<button onclick="downloadTxt()" class="flex-1 btn-grad py-3 rounded-xl font-bold">
+Download TXT
+</button>
+
+<button id="copyBtn" onclick="copyAll()" class="icon-btn">
+<i data-feather="copy"></i>
 </button>
 </div>
 
-<div id="popupContent" class="space-y-2 text-sm"></div>
-
-<button onclick="closePopup()"
-class="mt-5 w-full btn-gradient py-3 rounded-lg font-bold">
-Close
-</button>
 </div>
 </div>
 
 <script>
 feather.replace();
 
-const phoneInput = document.getElementById("phoneInput");
-const searchBtn = document.getElementById("searchBtn");
-const errorBox = document.getElementById("errorBox");
-const popupOverlay = document.getElementById("popupOverlay");
-const popupContent = document.getElementById("popupContent");
+const input=document.getElementById("input");
+const errorBox=document.getElementById("errorBox");
+const popupOverlay=document.getElementById("popupOverlay");
+const popupContent=document.getElementById("popupContent");
+const copyBtn=document.getElementById("copyBtn");
 
-searchBtn.onclick = searchNumber;
+let lastRecords=[];
 
-async function searchNumber(){
-    let num = phoneInput.value.trim();
-    if(!num){
-        showError("Please enter a phone number");
-        return;
-    }
+async function search(){
+ let val=input.value.trim();
 
-    if(num.startsWith("0")) num = num.slice(1);
-    if(num.startsWith("+")) num = num.replace("+","");
+ if(!val) return showError("Input required");
+ if(val.startsWith("0")||val.startsWith("+"))
+   return showError("0 ya +92 mat lagao");
 
-    errorBox.classList.add("hidden");
+ if(!/^[0-9]{10,11}$/.test(val) && !/^[0-9]{13}$/.test(val))
+   return showError("Invalid phone or CNIC");
 
-    const api = `https://fam-official.serv00.net/api/famdatabase.php?number=${num}`;
+ errorBox.classList.add("hidden");
 
-    try{
-        const res = await fetch(api);
-        const json = await res.json();
+ const api="https://corsproxy.io/?"+encodeURIComponent(
+   `https://fam-official.serv00.net/api/famdatabase.php?number=${val}`
+ );
 
-        if(!json.success || !json.data.records.length){
-            showError("No data found");
-            return;
-        }
+ try{
+   const res=await fetch(api);
+   const json=await res.json();
 
-        showPopup(json.data.records[0]);
+   if(!json.success||!json.data.records.length)
+     return showError("No data found");
 
-    }catch(e){
-        showError("API error or blocked");
-    }
+   lastRecords=json.data.records;
+   showPopup(lastRecords);
+
+ }catch{
+   showError("API blocked / network error");
+ }
 }
 
-function showPopup(data){
-    popupContent.innerHTML = "";
-    for(const key in data){
-        popupContent.innerHTML += `
-        <div class="result-row">
-            <strong>${key.replace("_"," ").toUpperCase()}:</strong>
-            <span>${data[key]}</span>
-        </div>`;
-    }
-    popupOverlay.style.display="flex";
-    feather.replace();
+function showPopup(records){
+ popupContent.innerHTML="";
+ records.forEach((r,i)=>{
+   popupContent.innerHTML+=`
+   <div class="card">
+     <div><strong>#${i+1}</strong></div>
+     <div><strong>NAME:</strong> ${r.full_name}</div>
+     <div><strong>PHONE:</strong> ${r.phone}</div>
+     <div><strong>CNIC:</strong> ${r.cnic}</div>
+     <div><strong>ADDRESS:</strong> ${r.address}</div>
+   </div>`;
+ });
+ popupOverlay.style.display="flex";
+ feather.replace();
 }
 
 function closePopup(){
-    popupOverlay.style.display="none";
+ popupOverlay.style.display="none";
+}
+
+// COPY with tick
+function copyAll(){
+ if(!lastRecords.length) return;
+
+ let text="";
+ lastRecords.forEach((r,i)=>{
+   text+=`#${i+1}\n`;
+   for(const k in r){
+     text+=`${k.toUpperCase()} : ${r[k]}\n`;
+   }
+   text+="\n";
+ });
+ text+="CREDIT : HAMZI";
+
+ navigator.clipboard.writeText(text);
+
+ copyBtn.innerHTML='<i data-feather="check"></i>';
+ feather.replace();
+
+ setTimeout(()=>{
+   copyBtn.innerHTML='<i data-feather="copy"></i>';
+   feather.replace();
+ },2000);
+}
+
+// DOWNLOAD
+function downloadTxt(){
+ if(!lastRecords.length) return;
+
+ let text="";
+ lastRecords.forEach((r,i)=>{
+   text+=`#${i+1}\n`;
+   for(const k in r){
+     text+=`${k.toUpperCase()} : ${r[k]}\n`;
+   }
+   text+="\n";
+ });
+ text+="CREDIT : HAMZI";
+
+ const blob=new Blob([text],{type:"text/plain"});
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download="results.txt";
+ a.click();
 }
 
 function showError(msg){
-    errorBox.textContent = msg;
-    errorBox.classList.remove("hidden");
+ errorBox.textContent=msg;
+ errorBox.classList.remove("hidden");
 }
 
-// Close popup when clicking outside
-popupOverlay.addEventListener("click", e=>{
-    if(e.target === popupOverlay) closePopup();
-});
+popupOverlay.onclick=e=>{
+ if(e.target===popupOverlay) closePopup();
+}
 </script>
 
 </body>
