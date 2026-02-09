@@ -5,13 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HAMZI-PAK-FIND</title>
 
-<!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-<!-- Icons -->
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
 <style>
@@ -83,7 +78,6 @@ body{
 .icon-btn:hover{transform:scale(1.1)}
 </style>
 </head>
-
 <body class="min-h-screen p-4 flex items-center justify-center">
 
 <div class="w-full max-w-md space-y-6">
@@ -161,17 +155,15 @@ async function searchData(){
  errorBox.classList.add("hidden");
 
  const apiURL = `https://fam-official.serv00.net/api/famdatabase.php?number=${val}`;
- const api = "https://corsproxy.io/?" + encodeURIComponent(apiURL);
+
+ // GitHub Pages friendly CORS proxy
+ const proxy = "https://api.allorigins.win/raw?url=";
 
  try{
-   const res = await fetch(api);
+   const res = await fetch(proxy + encodeURIComponent(apiURL), {cache:"no-store"});
    if(!res.ok) return showError("API blocked / server issue");
 
-   const text = await res.text();
-   let json;
-
-   try{ json = JSON.parse(text); }
-   catch{ return showError("Invalid API response"); }
+   const json = await res.json();
 
    if(!json.success || !json.data || !json.data.records || !json.data.records.length)
      return showError("No data found");
@@ -251,14 +243,13 @@ function downloadTxt(){
 }
 
 function showError(msg){
- errorBox.textContent=msg;
+ errorBox.textContent = msg;
  errorBox.classList.remove("hidden");
 }
 
-popupOverlay.onclick=e=>{
+popupOverlay.onclick = e=>{
  if(e.target===popupOverlay) closePopup();
 }
 </script>
-
 </body>
 </html>
